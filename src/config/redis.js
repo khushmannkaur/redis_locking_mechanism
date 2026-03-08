@@ -1,19 +1,20 @@
-// Use the REDIS_URL from your environment variables
+import { createClient } from 'redis';
+
+// Use the URL from Render's environment variables
 const redisClient = createClient({
     url: process.env.REDIS_URL || 'redis://127.0.0.1:6379'
 });
 
-// Handle Redis connection errors
-redisClient.on('error', (err) => {
-    console.error('Redis Error:', err);
-});
+redisClient.on('error', (err) => console.error('Redis Error:', err));
 
-// Function to connect to Redis
 const connectRedis = async () => {
     try {
         await redisClient.connect();
         console.log('✅ Redis Connected');
     } catch (err) {
-        console.error('❌ Failed to connect to Redis:', err);
+        console.error('❌ Redis Connection Failed:', err);
     }
 };
+
+// This export MUST exist for lock.util.js to work
+export { redisClient, connectRedis };
